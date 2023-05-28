@@ -1,0 +1,14 @@
+OPENTAG=1
+CLOSETAG=2
+ENDTAG=3
+ATTRIBUTION=4
+ASPAS=5
+SIMPLEASPAS=6
+TEXT=7
+WS=8
+'<'=1
+'>'=2
+'/>'=3
+'='=4
+'"'=5
+'\''=6
