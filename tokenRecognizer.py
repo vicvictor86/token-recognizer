@@ -3,7 +3,6 @@ import json
 from antlr4 import *
 
 from gen.HTMLRecognizerLexer import HTMLRecognizerLexer
-from gen.HTMLRecognizerParser import HTMLRecognizerParser
 
 tokens_name = {
     1: {'name': 'OPENTAG', 'color': 'red'},
@@ -41,9 +40,3 @@ def getHTMLTokens(htmlText):
             validHTMLTokens.append(token)
 
     return validHTMLTokens, tokens_and_type
-
-    # stream = CommonTokenStream(lexer)
-    # parser = HTMLRecognizerParser(stream)
-    #
-    # tree = parser.htmlTags()
-    # print(tree.toStringTree())
