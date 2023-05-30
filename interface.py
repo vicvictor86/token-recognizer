@@ -19,18 +19,31 @@ def popup_message(title, message, icon="info"):
     messagebox.showinfo(title, message, icon=icon)
 
 
+def deleteText(text_component):
+    text_component.configure(state='normal')
+    text_component.delete('1.0', tk.END)
+    text_component.configure(state='disabled')
+
+
+def insertText(text_component, text_to_add):
+    text_component.configure(state='normal')
+    text_component.insert(tk.END, text_to_add)
+    text_component.configure(state='disabled')
+
+
 def show_code():
     try:
         html_code = open_file()
         valid_html_tokens, tokens_and_type = getHTMLTokens(html_code)
 
-        text1.delete('1.0', tk.END)
-        text2.delete('1.0', tk.END)
+        deleteText(text1)
+        deleteText(text2)
 
         if html_code == "":
             popup_message("HTML Tokens", "Nenhum arquivo foi selecionado ou o arquivo está vazio.", "warning")
         else:
-            text1.insert(tk.END, html_code)
+            insertText(text1, html_code)
+
             formatTokensCollected(valid_html_tokens, tokens_and_type)
     except Exception as err:
         popup_message("Error", "Não foi possível abrir o arquivo selecionado.", "warning")
@@ -41,13 +54,11 @@ def formatTokensCollected(valid_html_tokens, tokens_and_type):
     for token in tokens_and_type:
         tokens_by_type = ''
         if tokens_name[token['type']]["name"] == 'TEXT' and token["text"] in valid_html_tokens:
-            tokens_by_type = f'{"ValidHtmlTag"}: {token["text"]}\n'
+            tokens_by_type = f'{"ValidHtmlTag"}: {token["text"]}\n\n'
         else:
-            tokens_by_type = f'{tokens_name[token["type"]]["name"]}: {token["text"]}\n'
+            tokens_by_type = f'{tokens_name[token["type"]]["name"]}: {token["text"]}\n\n'
 
-        # print(tokens_name[token["type"]])
-        # text2.configure(fg=tokens_name[token["type"]]["color"])
-        text2.insert(tk.END, tokens_by_type)
+        insertText(text2, tokens_by_type)
 
 
 def change_cursor(event):
@@ -56,7 +67,6 @@ def change_cursor(event):
 
 root = tk.Tk()
 root.title("Visualizador de Código HTML")
-
 
 root.geometry("800x600")
 root.state("zoomed")
@@ -86,7 +96,7 @@ text1_frame.pack(side=tk.LEFT, fill="both", expand=True)
 text1_label = tk.Label(text1_frame, text="Texto adicionado", bg="#1a1a1a", fg="white")
 text1_label.pack()
 
-text1 = tk.Text(text1_frame, bg="#1a1a1a", fg="white")
+text1 = tk.Text(text1_frame, bg="#1a1a1a", fg="white", state='disabled')
 text1.pack(side=tk.LEFT, fill="both", expand=True)
 
 text2_frame = tk.Frame(frame_divisao, bg="#1a1a1a")
@@ -95,7 +105,7 @@ text2_frame.pack(side=tk.LEFT, fill="both", expand=True)
 text2_label = tk.Label(text2_frame, text="Tokens Reconhecidos", bg="#1a1a1a", fg="white")
 text2_label.pack()
 
-text2 = tk.Text(text2_frame, bg="#1a1a1a", fg="white")
+text2 = tk.Text(text2_frame, bg="#1a1a1a", fg="white", state='disabled')
 text2.pack(side=tk.LEFT, fill="both", expand=True)
 
 root.mainloop()
