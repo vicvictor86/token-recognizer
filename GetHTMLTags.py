@@ -2,6 +2,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
+
 def getValidHTMLTags():
     url = "https://way2tutorial.com/html/tag/index.php"
     response = requests.get(url)

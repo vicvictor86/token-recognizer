@@ -1,12 +1,14 @@
 grammar HTMLRecognizer;
+options { caseInsensitive = true; }
 
-htmlTags: | (OPENTAG | TEXT | CLOSETAG | ENDTAG | ATTRIBUTION | ASPAS | SIMPLEASPAS)*;
+htmlTags: | (OPENTAG | ENDTAG | CLOSETAG | ATTRIBUTION | ASPAS | SIMPLEASPAS | LINK | TEXT)*;
 
 OPENTAG: '<';
 CLOSETAG: '>';
-ENDTAG: '/>';
+ENDTAG: '</';
 ATTRIBUTION: '=';
 ASPAS: '"';
 SIMPLEASPAS: '\'';
-TEXT: [a-zA-Z#_:/.%0-9,?@!&;-]+;
+LINK: 'https://' TEXT | 'http://' TEXT;
+TEXT: [a-z#_:/.%0-9,?@!&;-]+;
 WS: [ \t\n\r] -> skip;

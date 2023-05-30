@@ -10,8 +10,8 @@ else:
 
 def serializedATN():
     return [
-        4,1,8,12,2,0,7,0,1,0,1,0,5,0,5,8,0,10,0,12,0,8,9,0,3,0,10,8,0,1,
-        0,0,0,1,0,0,1,1,0,1,7,12,0,9,1,0,0,0,2,10,1,0,0,0,3,5,7,0,0,0,4,
+        4,1,9,12,2,0,7,0,1,0,1,0,5,0,5,8,0,10,0,12,0,8,9,0,3,0,10,8,0,1,
+        0,0,0,1,0,0,1,1,0,1,8,12,0,9,1,0,0,0,2,10,1,0,0,0,3,5,7,0,0,0,4,
         3,1,0,0,0,5,8,1,0,0,0,6,4,1,0,0,0,6,7,1,0,0,0,7,10,1,0,0,0,8,6,1,
         0,0,0,9,2,1,0,0,0,9,6,1,0,0,0,10,1,1,0,0,0,2,6,9
     ]
@@ -26,10 +26,10 @@ class HTMLRecognizerParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'<'", "'>'", "'/>'", "'='", "'\"'", "'''" ]
+    literalNames = [ "<INVALID>", "'<'", "'>'", "'</'", "'='", "'\"'", "'''" ]
 
     symbolicNames = [ "<INVALID>", "OPENTAG", "CLOSETAG", "ENDTAG", "ATTRIBUTION", 
-                      "ASPAS", "SIMPLEASPAS", "TEXT", "WS" ]
+                      "ASPAS", "SIMPLEASPAS", "LINK", "TEXT", "WS" ]
 
     RULE_htmlTags = 0
 
@@ -42,8 +42,9 @@ class HTMLRecognizerParser ( Parser ):
     ATTRIBUTION=4
     ASPAS=5
     SIMPLEASPAS=6
-    TEXT=7
-    WS=8
+    LINK=7
+    TEXT=8
+    WS=9
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -67,23 +68,17 @@ class HTMLRecognizerParser ( Parser ):
             else:
                 return self.getToken(HTMLRecognizerParser.OPENTAG, i)
 
-        def TEXT(self, i:int=None):
+        def ENDTAG(self, i:int=None):
             if i is None:
-                return self.getTokens(HTMLRecognizerParser.TEXT)
+                return self.getTokens(HTMLRecognizerParser.ENDTAG)
             else:
-                return self.getToken(HTMLRecognizerParser.TEXT, i)
+                return self.getToken(HTMLRecognizerParser.ENDTAG, i)
 
         def CLOSETAG(self, i:int=None):
             if i is None:
                 return self.getTokens(HTMLRecognizerParser.CLOSETAG)
             else:
                 return self.getToken(HTMLRecognizerParser.CLOSETAG, i)
-
-        def ENDTAG(self, i:int=None):
-            if i is None:
-                return self.getTokens(HTMLRecognizerParser.ENDTAG)
-            else:
-                return self.getToken(HTMLRecognizerParser.ENDTAG, i)
 
         def ATTRIBUTION(self, i:int=None):
             if i is None:
@@ -102,6 +97,18 @@ class HTMLRecognizerParser ( Parser ):
                 return self.getTokens(HTMLRecognizerParser.SIMPLEASPAS)
             else:
                 return self.getToken(HTMLRecognizerParser.SIMPLEASPAS, i)
+
+        def LINK(self, i:int=None):
+            if i is None:
+                return self.getTokens(HTMLRecognizerParser.LINK)
+            else:
+                return self.getToken(HTMLRecognizerParser.LINK, i)
+
+        def TEXT(self, i:int=None):
+            if i is None:
+                return self.getTokens(HTMLRecognizerParser.TEXT)
+            else:
+                return self.getToken(HTMLRecognizerParser.TEXT, i)
 
         def getRuleIndex(self):
             return HTMLRecognizerParser.RULE_htmlTags
@@ -142,10 +149,10 @@ class HTMLRecognizerParser ( Parser ):
                 self.state = 6
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while (((_la) & ~0x3f) == 0 and ((1 << _la) & 254) != 0):
+                while (((_la) & ~0x3f) == 0 and ((1 << _la) & 510) != 0):
                     self.state = 3
                     _la = self._input.LA(1)
-                    if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 254) != 0)):
+                    if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 510) != 0)):
                         self._errHandler.recoverInline(self)
                     else:
                         self._errHandler.reportMatch(self)
